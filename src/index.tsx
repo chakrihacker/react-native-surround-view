@@ -1,5 +1,3 @@
-export default {
-  multiply(a: number, b: number) {
-    return Promise.resolve(a * b);
-  },
-};
+import { SurroundView } from './surround-view/surround-view';
+
+export default SurroundView;

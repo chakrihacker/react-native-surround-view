@@ -15,7 +15,9 @@ import SurroundView from "react-native-surround-view";
 
 // ...
 
-const result = await SurroundView.multiply(3, 7);
+<SurroundView>
+  <Text>{'Press and hold'}</Text>
+</SurroundView>
 ```
 
 ## Contributing

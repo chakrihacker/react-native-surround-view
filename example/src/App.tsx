@@ -4,15 +4,11 @@ import { StyleSheet, View, Text } from 'react-native';
 import SurroundView from 'react-native-surround-view';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
-  React.useEffect(() => {
-    SurroundView.multiply(3, 7).then(setResult);
-  }, []);
-
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <SurroundView width={200} height={35}>
+        <Text>{'Chakravarthy'}</Text>
+      </SurroundView>
     </View>
   );
 }
