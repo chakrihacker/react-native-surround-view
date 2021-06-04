@@ -1,5 +1,5 @@
-import React, { FC } from 'react';
-import { Pressable, View } from 'react-native';
+import React, { FC, useMemo } from 'react';
+import { Pressable, View, ViewStyle } from 'react-native';
 import Animated, {
   runOnJS,
   useAnimatedProps,
@@ -16,6 +16,9 @@ export interface SurroundViewProps {
   duration?: number;
   onSurround?: () => void;
   onRelease?: () => void;
+  startPoint?: 'TOP_START' | 'TOP_END' | 'BOTTOM_START' | 'BOTTOM_END';
+  containerStyle?: ViewStyle;
+  style?: ViewStyle;
 }
 
 const AnimatedRect = Animated.createAnimatedComponent(Rect);
@@ -28,11 +31,34 @@ export const SurroundView: FC<SurroundViewProps> = ({
   duration = 1000,
   onSurround = () => {},
   onRelease = () => {},
+  startPoint = 'TOP_START',
+  containerStyle = {},
+  style = {},
   children,
 }) => {
   const rectLength = 2 * (width + height);
   const animatedRectLength = useSharedValue(0);
   const isAnimationRunning = useSharedValue(false);
+
+  const offSetForStartPoint = useMemo(() => {
+    let offset = 0;
+    switch (startPoint) {
+      case 'TOP_START':
+        break;
+      case 'BOTTOM_START':
+        offset = height;
+        break;
+      case 'BOTTOM_END':
+        offset = width + height;
+        break;
+      case 'TOP_END':
+        offset = -width;
+        break;
+      default:
+        break;
+    }
+    return offset;
+  }, [height, startPoint, width]);
 
   const surround = () => {
     isAnimationRunning.value = true;
@@ -64,7 +90,7 @@ export const SurroundView: FC<SurroundViewProps> = ({
 
   const animatedRectProps = useAnimatedProps(() => {
     return {
-      strokeDashoffset: animatedRectLength.value / 2,
+      strokeDashoffset: animatedRectLength.value / 2 + offSetForStartPoint,
       strokeDasharray: [
         animatedRectLength.value,
         rectLength - animatedRectLength.value,
@@ -73,7 +99,7 @@ export const SurroundView: FC<SurroundViewProps> = ({
   });
 
   return (
-    <Pressable onPressIn={surround} onPressOut={handleOnPressOut}>
+    <Pressable onPressIn={surround} onPressOut={handleOnPressOut} style={style}>
       <Svg width={width} height={height}>
         <AnimatedRect
           x={'0'}
@@ -85,12 +111,17 @@ export const SurroundView: FC<SurroundViewProps> = ({
           animatedProps={animatedRectProps}
         />
         <View
-          // eslint-disable-next-line react-native/no-inline-styles
-          style={{
-            padding: strokeWidth,
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
+          style={[
+            // eslint-disable-next-line react-native/no-inline-styles
+            {
+              width: '100%',
+              height: '100%',
+              padding: strokeWidth,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            containerStyle,
+          ]}
         >
           {children}
         </View>
