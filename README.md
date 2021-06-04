@@ -120,7 +120,7 @@ String to determine the position to start the animation.
 
 | Type       | Required |
 | ---------- | -------- |
-| 'TOP_START' \| 'TOP_END' \| 'BOTTOM_START' \| 'BOTTOM_END'   \| No       |
+| 'TOP_START' \| 'TOP_END' \| 'BOTTOM_START' \| 'BOTTOM_END'   | No       |
 
 ---
 
